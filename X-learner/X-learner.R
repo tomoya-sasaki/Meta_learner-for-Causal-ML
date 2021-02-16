@@ -98,7 +98,7 @@ X_learner <- function(df_aux,df_main,covariates,learners,R){
   tau_weight <- p_hat_main*score_tau0 + (1-p_hat_main)*score_tau1
   
   
-    est_cate_X[,r] <- score_dr 
+    est_cate_X[,r] <- tau_weight 
   }
   
   return(apply(est_cate_X,1,median))
