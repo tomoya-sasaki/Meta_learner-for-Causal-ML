@@ -16,7 +16,7 @@ control <- SuperLearner.CV.control(V=5) # The cross-validation parameter
 
 R <- 10 # The number of repetitions for cross-fitting and median averaging. 
 
-X_learner <- function(df_aux,df_main,covariates,learners){
+X_learner <- function(df_aux,df_main,covariates,learners,R){
 
   est_cate_X <- matrix(0,nrow(df_main),R)
   
