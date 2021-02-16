@@ -29,12 +29,12 @@ X_learner <- function(df_aux,df_main,covariates,learners,R){
     df_aux1<- as.data.frame(df_aux[ ind,])
     df_aux2 <- as.data.frame(df_aux[-ind,])
   
-  p_mod <- SuperLearner(Y = df_aux$d, X = df_aux1[,covariates], newX = df_main[,covariates], SL.library = learners,
+  p_mod <- SuperLearner(Y = df_aux$d, X = df_aux[,covariates], newX = df_main[,covariates], SL.library = learners,
                         verbose = FALSE, method = "method.NNLS", family = binomial(),cvControl = control)
   
   # Prop-Score for df_main
   p_hat_main <- p_mod$predictions
-  p_hat_main = ifelse(p_hat<0.025, 0.025, ifelse(p_hat>.975,.975, p_hat)) # Overlap bounding
+  p_hat_main = ifelse(p_hat_main<0.025, 0.025, ifelse(p_hat_main>.975,.975, p_hat_main)) # Overlap bounding
   
   aux_1 <- df_aux1[which(df_aux1$d==1),]
   aux_0 <- df_aux1[which(df_aux1$d==0),]
