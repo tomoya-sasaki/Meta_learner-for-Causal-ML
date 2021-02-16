@@ -1,17 +1,20 @@
 install.packages("xgboost", repos=c("http://dmlc.ml/drat/", getOption("repos")), type="source")
-vec.pac= c("SuperLearner", "gbm", "glmnet","ranger")
+vec.pac= c("SuperLearner", "gbm", "glmnet","ranger","caret")
 
 lapply(vec.pac, require, character.only = TRUE) 
 
+# df_aux is the training set
+# df_main is the test set where the CATE is estimated on
+# covariates are the pre-treatment covariates 
 
 
-
-#Learner Library:
+#Learner Library for the SuperLearner:
 learners <- c( "SL.glmnet","SL.xgboost", "SL.ranger","SL.lm","SL.mean")
 
 #CV Control for the SuperLearner
-control <- SuperLearner.CV.control(V=5)
+control <- SuperLearner.CV.control(V=5) # The cross-validation parameter 
 
+R <- 10 # The number of repetitions for cross-fitting and median averaging. 
 
 X_learner <- function(df_aux,df_main,covariates,learners){
 
