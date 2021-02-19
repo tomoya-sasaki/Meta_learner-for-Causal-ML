@@ -332,10 +332,16 @@ ggplot(mm, aes(x=ID,y=value,group=variable))+
 
 
 quantiles <- function(CATE){
-S2        <- CATE+runif(length(CATE), 0, 0.00001) # Include white noise to guarantee that the score (S) differs from the baseline effect
-S_20 <- as.numeric(quantile(S2, c(.20)))
-S_ATE <- mean(S2)
-S_80 <- as.numeric(quantile(S2,c(.80)))
+  S2        <- CATE+runif(length(CATE), 0, 0.00001) # Include white noise to guarantee that the score (S) differs from the baseline effect
+  breaks    <- quantile(S2, seq(0,1, 0.2),  include.lowest =T) # Quantiles create 5 groups by default - no parameter necessary 
+  breaks[1] <- breaks[1] - 0.002 # Offset for lower tails 
+  breaks[6] <- breaks[6] + 0.002 # Offset for upper tails
+  SG        <- cut(S2, breaks = breaks)
+  lev20 <- levels(SG)[1]
+  lev80 <- levels(SG)[5]
+  S_20 <- mean(CATE[SG==lev20])
+  S_ATE <- mean(CATE)
+  S_80 <- mean(CATE[SG==lev80])
 
 return(data.frame(S_20,S_ATE,S_80))
 
