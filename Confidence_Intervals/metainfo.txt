@@ -10,6 +10,6 @@ Keywords: 'CATE, ML, bootstrap,confidence-intervals, causal-inference, treatment
 
 Author: 'Daniel Jacob'
 
-See also: ''
+See also: 'https://www.pnas.org/content/116/10/4156'
 
 Submitted:  '10.02.2021'
