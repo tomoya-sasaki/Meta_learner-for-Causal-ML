@@ -6,10 +6,10 @@ Description: A simple example of treatment effect heterogeneity given characteri
 
 The data structure has to be the following: 
 
-* y = outcome variable
-* d = treatment variable
-* X = a covariate
-* tau = treatment effect: If X<0, tau = 4; if X>0, tau = 10
+- y = outcome variable
+- d = treatment variable
+- X = a covariate
+- tau = treatment effect: If X<0, tau = 4; if X>0, tau = 10
 
 
 
