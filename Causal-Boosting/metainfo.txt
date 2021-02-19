@@ -6,9 +6,9 @@ Description: Causal Boosting (regression tree) method to estimate the conditiona
 
 The data structure has to be the following: 
 
-* y = outcome variable
-* d = treatment variable
-* covariates = the covariates to map on d or y
+- y = outcome variable
+- d = treatment variable
+- covariates = the covariates to map on d or y
 
 
 Keywords: 'CATE, ML, causal Boosting, causal-inference, treatment'
