@@ -6,9 +6,9 @@ Description: Causal Bayesian additive regression tree method to estimate the con
 
 The data structure has to be the following: 
 
-* y = outcome variable
-* d = treatment variable
-* covariates = the covariates to map on d or y
+- y = outcome variable
+- d = treatment variable
+- covariates = the covariates to map on d or y
 
 
 Keywords: 'CATE, ML, causal BART, causal-inference, treatment'
