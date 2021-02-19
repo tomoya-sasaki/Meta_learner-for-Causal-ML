@@ -6,9 +6,9 @@ Description: Files to estimate the CATE from the empirical dataset (Microcredit 
 
 The data structure has to be the following: 
 
-* y = outcome variable
-* d = treatment variable
-* covariates = the covariates to map on d or y. The names of the covariates can be seen in the main.R file. 
+- y = outcome variable
+- d = treatment variable
+- covariates = the covariates to map on d or y. The names of the covariates can be seen in the main.R file. 
 
 
 Keywords: 'CATE, ML, microcredit, causal-inference, treatment'
