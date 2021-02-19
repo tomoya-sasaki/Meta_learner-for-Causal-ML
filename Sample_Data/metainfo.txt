@@ -6,10 +6,10 @@ Description: Creates a training and test-set for causal inference analysis.
 
 The data structure is the following: 
 
-* y = outcome variable
-* theta = the treatment effect
-* d = treatment variable
-* covariates = the covariates in the form of V1 to Vp (given p-dimensional covariates)
+- y = outcome variable
+- theta = the treatment effect
+- d = treatment variable
+- covariates = the covariates in the form of V1 to Vp (given p-dimensional covariates)
 
 
 
