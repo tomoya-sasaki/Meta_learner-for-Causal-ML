@@ -9,7 +9,7 @@ The data structure has to be the following:
 - y = outcome variable
 - d = treatment variable
 - covariates = the covariates to map on d or y
-- theta =  the true treatment effect (simulation study also includes)
+- theta =  the true treatment effect (simulation study also includes this variable)
 
 
 Keywords: 'CATE, ML, simulation, causal-inference, treatment'
