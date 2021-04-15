@@ -28,4 +28,4 @@ Submitted:  '10.02.2021'
 
 ```
 
-![Picture1](Simulation_scatterplot_S1.png)
+![Picture1](Simulation_Scatterplot_S1.png)
