@@ -9,7 +9,7 @@ The repository contains code for meta-learners and ML-methods designed for heter
 * R-learner
 * S-learner
 * T-learner
-* TO-leanrer
+* TO-learner (IPW learner)
 * X-learner
 
 # Estimation procedure
