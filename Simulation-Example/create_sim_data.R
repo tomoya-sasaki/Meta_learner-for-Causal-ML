@@ -14,28 +14,34 @@ if(!require("clusterGeneration")) install.packages("clusterGeneration"); library
 if(!require("mvtnorm")) install.packages("mvtnorm"); library("mvtnorm")
 
 
-datagen <- function(N=N,y,k,random_d,theta,var) {
+datagen <- function(N=N,y,k,random_d,theta,var,iter) {
   
   # fixed components
   b = 1 / (1:k)
   
   # = Generate covariance matrix of z = #
-  #set.seed(123*iter)
+  set.seed(123*iter)
   sigma <- genPositiveDefMat(k, "unifcorrmat")$Sigma
-  #set.seed(123*iter)
+  set.seed(123*iter)
   sigma <- cov2cor(sigma)
   
-  #set.seed(123*iter)
+  set.seed(123*iter)
   z_fix <- rmvnorm(N, sigma = sigma) # = Generate z = #
   
   
   ### Options for theta
   
-  #set.seed(123*iter)
-  theta_con_lin <- as.vector(z_fix[,1] + (z_fix[,2]>0) + rnorm(N,0,0.5))
-  #set.seed(123*iter)
-  theta_con_non <- as.vector(sin(z_fix[,3:5] %*% b[1:3]) + cos(z_fix[,10]))
+  # create subgroup effect
+  z_fix[,5] <- rep(c(-0.2,0,0.2,0.6),length.out=nrow(z_fix))
   
+  set.seed(123*iter)
+  theta_con_lin <- as.vector(0.6*z_fix[,1] + 0.6*z_fix[,2] + 0.6*z_fix[,3] + 0.6*z_fix[,4] + z_fix[,5] + rnorm(N,0,0.5))
+  #set.seed(123*iter)
+  theta_con_non <- as.vector(sin(z_fix[,1:3] %*% b[1:3]) + 1.5*cos(z_fix[,4])) + z_fix[,5]
+  #set.seed(123*iter)
+  theta_binary <- as.vector(ifelse(z_fix[,1]>0,0.5,-0.5)) + ifelse(z_fix[,5]>0,0.5,-0.5)
+  
+  theta_interaction <- as.vector(z_fix[,1]*z_fix[,2] + z_fix[,2] + z_fix[,3]*z_fix[,4] + z_fix[,5])
   
   
   
@@ -45,7 +51,9 @@ datagen <- function(N=N,y,k,random_d,theta,var) {
   {theta <- theta_con_non}
   else if(theta=="binary")
   {theta <- theta_binary}
-  else
+  else if(theta=="interaction")
+  {theta <- theta_interaction}
+  else 
   {theta <- 0}
   
   
@@ -56,6 +64,7 @@ datagen <- function(N=N,y,k,random_d,theta,var) {
     d <- rep(c(0, 1), length.out = N)
   } else 
     if(random_d =="imbalanced"){
+      set.seed(123+iter)
       d <-  as.numeric(rbinom(N,prob=0.2,size=1))
       
     }
@@ -63,16 +72,16 @@ datagen <- function(N=N,y,k,random_d,theta,var) {
     
     
     if(random_d == "linear"){
-      d_prop <- pnorm( z[,k/2] + z[,2] + z[,k/4] - z[,8]) # D is dependent on Za
+      d_prop <- pnorm( z[,1] + z[,2] + z[,3] - z[,4]) # D is dependent on Za
       d <- as.numeric(rbinom(N, prob = d_prop, size = 1))
     }
   else 
     if(random_d == "interaction"){
-      d_prop <- pnorm((z %*% b) + z[,k/2] + z[,2] + z[,k/4]*z[,8]) # D is dependent on Za
+      d_prop <- pnorm( z[,1]*z[,2] + z[,3]*z[,4]) # D is dependent on Za
       d <- as.numeric(rbinom(N, prob = d_prop, size = 1))
     }
   else{
-    d_prop <- pnorm((z %*% b) + sin(z[,k/2]) + z[,2] + cos(z[,k/4]*z[,8])) # D is dependent on Za
+    d_prop <- pnorm( sin(z[,1]) + sin(z[,2]) + cos(z[,3]*z[,4])) # D is dependent on Za
     d <- as.numeric(rbinom(N, prob = d_prop, size = 1))
     
   }
@@ -82,7 +91,7 @@ datagen <- function(N=N,y,k,random_d,theta,var) {
   
   
   
-  g <- as.vector(z[,k/10] + z[,k/2] + z[,k/4]*z[,k/10])
+  g <- as.vector(z[,1]*z[,2] + z[,3]*z[,4] + z[,5])
   
   
   if(y=="binary") {
@@ -102,6 +111,7 @@ datagen <- function(N=N,y,k,random_d,theta,var) {
 
 
 ### Example
-dataset <- datagen(y="con",N = 2000, k = 20, random_d = "linear", theta = "con_non", var = 1)
+df_aux <- datagen(y="con",N = 1000, k = 20, random_d = "linear", theta = "con_non", var = 1,iter=2)
+df_main <- datagen(y="con",N = 1000, k = 20, random_d = "linear", theta = "con_non", var = 1,iter=2)
 
-
+all.equal(df_aux,df_main)
