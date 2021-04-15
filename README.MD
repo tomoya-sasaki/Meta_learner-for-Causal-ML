@@ -27,6 +27,22 @@ We aim to estimate the CATE on the whole sample. We proceed as follows:
 9. Reverse the role of the samples to obtain *CATE_A*.
 10. Combine *CATE_A* and *CATE_M* (according to their ID in the dataset) and obtain the final *CATE*.
 
+# Data generating process for simulated data
+When relying on simulated data we offer a broad rage of functions to generade artificial data.
+The file to generate data is in the Simulation-Example folder. 
+
+The treatment assignment can be set to the following:
+- random (with different proportions)
+- linear
+- interaction terms
+- non-linear (more complex)
+
+The treatment effect contains the following options:
+- zero
+- binary
+- linear
+- non-linear
+
 # Reference
 
 The empirical examples and simulation study contain replecation code from the paper
