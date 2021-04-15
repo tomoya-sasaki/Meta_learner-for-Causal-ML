@@ -1,4 +1,4 @@
-bootCI <- function(pred_B,est_R){
+bootCI <- function(pred_B,score){
   
   
   # the the 5% and 95% CI from the bootstrapped procedure
@@ -11,8 +11,8 @@ bootCI <- function(pred_B,est_R){
   )
   
   return(data.frame(
-    pred = apply(est_R,1,median),
-    X5. =  apply(est_R,1,median) - 1.96 * CI_b$sd,
-    X95. = apply(est_R,1,median) + 1.96 * CI_b$sd
+    pred = score,
+    X5. =  score - 1.96 * CI_b$sd,
+    X95. = score + 1.96 * CI_b$sd
   ))
 }
