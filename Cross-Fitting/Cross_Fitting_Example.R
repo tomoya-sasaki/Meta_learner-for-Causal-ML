@@ -1,9 +1,7 @@
-if(!require("SuperLearner")) install.packages("SuperLearner"); library("SuperLearner")
-install.packages("xgboost", repos=c("http://dmlc.ml/drat/", getOption("repos")), type="source")
+
 vec.pac= c("mvtnorm","clusterGeneration","SuperLearner", "gbm", "glmnet",
-           "MASS", "rpart", "doParallel", "sandwich", "randomForest",
-           "nnet", "matrixStats", "xtable", "car", "lfe","dplyr",
-           "caret", "multcomp", "dplyr","ranger","cowplot", "ggplot2" ,"reshape","e1071","foreach","doParallel")
+           "MASS", "rpart", "matrixStats", "xtable", "car", "lfe","dplyr",
+           "caret", "multcomp", "dplyr","ranger","cowplot", "ggplot2" ,"reshape")
 
 lapply(vec.pac, require, character.only = TRUE) 
 cbp <- c("#000000", "#E69F00", "#56B4E9", "#009E73",
@@ -12,47 +10,18 @@ cbp <- c("#000000", "#E69F00", "#56B4E9", "#009E73",
 
 
 #Learner Library
-learners <- c( "SL.glmnet", "SL.ranger","SL.lm","SL.mean") # SVM excluded since it does not offer "obs.weights" variable 
-learners <- c( "SL.glmnet")
+learners <- c( "SL.glmnet", "SL.ranger") 
 
 #CV Control
 control <- SuperLearner.CV.control(V=5)
 
 
-
-
-
-
-
 N <- 2000
 k <- 10
-
-# create matrix of DGP settings
-settings <- as.data.frame(matrix(c(N,N,N,N,N,N,N,N,N,N,N,N,
-                                   k,k,k,k,k,k,k,k,k,k,k,k), ncol=2))
-settings$V3 <- c(T,"imbalanced","linear","interaction","non-lin","linear",T,"imbalanced","linear","interaction","non-lin","linear") # treatment assigment T = random; lin = linear; interaction = non linear in coefficients, imbalanced = P(D=1) = 0.8; non_lin = sin and cos functions
-settings$V4 <- c("con_lin","con_lin","con_non","binary","con_non","zero","con_non","binary","con_non","zero","con_lin","con_lin") # Settings for theta
-
-
-settings <- settings[12,]
-
-
-
-
-
-all_results_DR <- list()
-
 M <- 50
-d <- 1
-  
 
-    
-    
-    
-    
-    
-    
-    
+  
+ 
   
     
     # CATE 
@@ -67,7 +36,8 @@ d <- 1
     
     for(b in 1:M) {
  
-    data <- datagen(y="con", N=settings[d,1],k=settings[d,2],random_d=settings[d,3],theta=settings[d,4],var=1)
+    # Create dataset and use 1/4 as a test-set
+    data <- datagen(y="con", N=2000,k=10,random_d="linear",theta="con_lin",var=1,iter=1)
     test_index <- createDataPartition(data$d,p=0.25, list=FALSE)
     
     test_data <- data[test_index,]
@@ -124,14 +94,14 @@ d <- 1
         
         
         p_mod <- SuperLearner(Y = df_aux$d, X = df_aux[,covariates], newX = df_main[,covariates], SL.library = learners,
-                              verbose = FALSE, method = "method.NNLS", family = binomial())
+                              verbose = FALSE, method = "method.NNLS", family = binomial(),cvControl = control)
         
         p_hat <- p_mod$SL.predict
         p_hat = ifelse(p_hat<0.025, 0.025, ifelse(p_hat>.975,.975, p_hat)) # Overlap bounding
         
         
         m_mod <- SuperLearner(Y = df_aux$y, X = df_aux[,covariates], newX = df_main[,covariates], SL.library = learners,
-                              verbose = FALSE, method = "method.NNLS")
+                              verbose = FALSE, method = "method.NNLS",cvControl = control)
         
         m_hat <- m_mod$SL.predict
         
@@ -144,7 +114,7 @@ d <- 1
         
         a  <- tryCatch({
           R_mod <- SuperLearner(Y = pseudo_outcome, X = df_main[,covariates], newX = test_data[,covariates], SL.library = learners,
-                                verbose = FALSE, method = "method.NNLS",obsWeights = weights[,1])
+                                verbose = FALSE, method = "method.NNLS",obsWeights = weights[,1],cvControl = control)
           score_R <- R_mod$SL.predict
           a <- score_R
           
@@ -179,22 +149,10 @@ d <- 1
    
       
       print(paste0("................................... ","The current iteration is: ", b, " out of " ,M))
-      
-    
-    
-    
-    
-    
-    
-    
-    
     
     }
     
  
-    
-
-  
   
   
   mm <- melt(mse_all)
@@ -206,19 +164,10 @@ d <- 1
   
   ggplot(mm, aes(x=repetitions, y=value,group=Estimator))+
     geom_point(aes(color=Estimator, shape=Estimator),size=3)+
-    #geom_line(data=mm[mm$Model=="DR_3folds_cross (median)"| mm$Model=="DR_2folds (median)"| mm$Model=="T_cross (median)" | mm$Model=="DR_3folds (median)", ],
-    #         aes(color=factor(Model))) +
     theme_cowplot() +
-    #facet_wrap( ~ DGP, scales="free", nrow=4) + # Facet wrap with common scales 
     labs(y = "MSE ", x = "Replication") +
     scale_color_manual(values = cbp) +
     theme(legend.position="bottom", legend.justification = 'center') +
-    scale_shape_manual(values = c(16,17,15,3,7,8,42,43))
+    scale_shape_manual(values = c(16,17))
   
-  
-  
-  
-  
-  
-  
-
+ 
