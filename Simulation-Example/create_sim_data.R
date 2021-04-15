@@ -39,7 +39,7 @@ datagen <- function(N=N,y,k,random_d,theta,var,iter) {
   #set.seed(123*iter)
   theta_con_non <- as.vector(sin(z_fix[,1:3] %*% b[1:3]) + 1.5*cos(z_fix[,4])) + z_fix[,5]
   #set.seed(123*iter)
-  theta_binary <- as.vector(ifelse(z_fix[,1]>0,0.5,-0.5)) + ifelse(z_fix[,5]>0,0.5,-0.5)
+  theta_lowdim <- as.vector(ifelse(z_fix[,1]>0,0.5,-0.5)) + ifelse(z_fix[,5]>0,0.5,-0.5)
   
   theta_interaction <- as.vector(z_fix[,1]*z_fix[,2] + z_fix[,2] + z_fix[,3]*z_fix[,4] + z_fix[,5])
   
@@ -49,8 +49,8 @@ datagen <- function(N=N,y,k,random_d,theta,var,iter) {
   {theta <- theta_con_lin}
   else if(theta=="con_non")
   {theta <- theta_con_non}
-  else if(theta=="binary")
-  {theta <- theta_binary}
+  else if(theta=="low_dim")
+  {theta <- theta_lowdim}
   else if(theta=="interaction")
   {theta <- theta_interaction}
   else 
