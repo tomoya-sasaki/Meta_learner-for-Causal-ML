@@ -28,3 +28,5 @@ Submitted:  '10.02.2021'
 ```
 
 ![Picture1](401k_CATE.png)
+
+![Picture2](401k_balance_IPW.png)
