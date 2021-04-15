@@ -30,4 +30,4 @@ We aim to estimate the CATE on the whole sample. We proceed as follows:
 # Reference
 
 The empirical examples and simulation study contain replecation code from the paper
-[Jacob (2020) - CATE Meets ML](http://ssrn.com/abstract=3816558)
+[Jacob (2021) - CATE Meets ML](http://ssrn.com/abstract=3816558)
