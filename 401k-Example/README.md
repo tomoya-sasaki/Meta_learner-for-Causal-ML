@@ -27,4 +27,4 @@ Submitted:  '10.02.2021'
 
 ```
 
-![Picture1](401k_CATE_all_CI.png)
+![Picture1](401k_CATE.png)
