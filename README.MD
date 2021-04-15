@@ -39,9 +39,11 @@ The treatment assignment can be set to the following:
 
 The treatment effect contains the following options:
 - zero
-- binary
+- low dimensional (only three different values)
 - linear
 - non-linear
+
+The baseline function can also be altered as well as the variance for certain models.
 
 # Reference
 
