@@ -3,9 +3,11 @@
 The repository contains code for meta-learners and ML-methods designed for heterogeneout treatment effect estimation 
 
 * Causal BART
+* Causal Boosting
 * Causal Forest (based on GRF)
 * DR-learner
 * R-learner
+* S-learner
 * T-learner
 * TO-leanrer
 * X-learner
