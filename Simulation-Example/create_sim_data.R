@@ -5,8 +5,8 @@
 
 # N = Number of observations (real number)
 # k = Number of covariates (real number)
-# random_d = treatment assignment: (Either T for random assignment or F for confounding on X)
-# theta = treatment effect: (Either real number for only one theta, or "binary" {0.1,0.3} or "con" for continuous values (0.1,0.3))
+# random_d = treatment assignment: (Either T for random assignment or other values for confounding on X)
+# theta = treatment effect: (Either real number for only one theta, or low dimensional {-0.5,0,+0.5} or "con" for continuous values)
 # var = Size of the variance (Noise-level)
 
 #Required Packages
