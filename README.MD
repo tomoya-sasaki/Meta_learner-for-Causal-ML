@@ -27,6 +27,7 @@ We aim to estimate the CATE on the whole sample. We proceed as follows:
 9. Reverse the role of the samples to obtain *CATE_A*.
 10. Combine *CATE_A* and *CATE_M* (according to their ID in the dataset) and obtain the final *CATE*.
 
+# Reference
 
 The empirical examples and simulation study contain replecation code from the paper
 [Jacob (2020) - CATE Meets ML](http://ssrn.com/abstract=3816558)
