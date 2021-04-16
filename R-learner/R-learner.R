@@ -61,7 +61,7 @@ for(f in 1:(length(folds))){
   df_aux <- data1
   
   
-  ## DR-learner 
+  ## R-learner 
   # Train a classification model to get the propensity scores
   p_mod <- SuperLearner(Y = df_aux$d, X = df_aux[,covariates], newX = df_main[,covariates], SL.library = learners,
                         verbose = FALSE, method = "method.NNLS", family = binomial(),cvControl = control)
@@ -69,13 +69,6 @@ for(f in 1:(length(folds))){
   p_hat <- p_mod$SL.predict
   p_hat = ifelse(p_hat<0.025, 0.025, ifelse(p_hat>.975,.975, p_hat)) # Overlap bounding
   
- 
-  
-  ######################
-  
-  
-  
-  ### R-learner 
   
   # Train a regression model 
   m_mod <- SuperLearner(Y = df_aux$y, X = df_aux[,covariates], newX = df_main[,covariates], SL.library = learners,
@@ -92,9 +85,6 @@ for(f in 1:(length(folds))){
   ## Collect all pseudo outcomes
   pseudo_all[,1][df_main$ID] <- pseudo_outcome
   pseudo_all[,2][df_main$ID] <- weights
-  
-
-  
   
   
 }
@@ -122,10 +112,6 @@ R_mod_oob <- SuperLearner(Y = pseudo_all[(nhalf+1):n,2], X = data[(nhalf+1):n,co
 score_R_0 <- R_mod_oob$SL.predict
 
 score_R_oob = rbind(score_R_0,score_R_1)
-
-
-
-
 
 
 
