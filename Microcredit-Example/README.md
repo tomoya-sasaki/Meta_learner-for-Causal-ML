@@ -27,4 +27,4 @@ Submitted:  '10.02.2021'
 
 ```
 
-![Picture1](Microcredit_CATE_estimates.png)
+![Picture1](Microcredit_CATE.png)
