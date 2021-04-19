@@ -14,7 +14,7 @@ The repository contains code for meta-learners and ML-methods designed for heter
 
 # Estimation procedure
 
-We aim to estimate the CATE on the whole sample. We proceed as follows:
+We aim to estimate the CATE on the whole sample and apply 5-fold cross-fitting. We proceed as follows:
 
 1. Split data into *5* folds.
 2. Use all but fold *k* to train the nuisance functions and fold *k* predict the nuisance paramters.
@@ -23,9 +23,10 @@ We aim to estimate the CATE on the whole sample. We proceed as follows:
 5. Collect all the nuisance parameters and pseudo-outcomes.
 6. Create a new dataset that contains the pseudo-outcomes and covariates (for the R-learner also the weights).
 7. Split this dataset into two folds (A and M).
-8. Use A to regress the covariates on the pseudo-outcome and M to predict the *CATE_M*.
-9. Reverse the role of the samples to obtain *CATE_A*.
-10. Combine *CATE_A* and *CATE_M* (according to their ID in the dataset) and obtain the final *CATE*.
+8. Split A again in 5 folds. This is the cross-fitting part. 
+9. Use each of the 5 folds to regress the covariates on the pseudo-outcome and M to predict the *CATE_M_1* to *CATE_M_5*.
+10. Reverse the role of the samples to obtain *CATE_A_1* to *CATE_A_5*.
+11. Average the estimates to obtain *CATE_A* and *CATE_M* (according to their ID in the dataset) and obtain the final *CATE*.
 
 # Data generating process for simulated data
 When relying on simulated data we offer a broad rage of functions to generade artificial data.
