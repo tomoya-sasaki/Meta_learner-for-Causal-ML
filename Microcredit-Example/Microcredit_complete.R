@@ -315,7 +315,6 @@ for(f in 1:(length(folds))){
 
 
 # Estimate CATE for each observation
-R <- 5
 
 SL.nnet_td <- create.Learner("SL.nnet", params = list(maxit=5000))
 SL.ranger_td = create.Learner("SL.ranger", params = list(num.trees = 1000, min.node.size = 10))
