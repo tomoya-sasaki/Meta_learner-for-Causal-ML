@@ -69,23 +69,33 @@ for(f in 1:(length(folds))){
 }
   
   
-nhalf = floor(0.5*nrow(data))
-n = nrow(data)
-
-
-to_mod_oob <- SuperLearner(Y = pseudo_all[1:nhalf,1], X = data[1:nhalf,covariates], newX = data[(nhalf+1):n,covariates], SL.library = learners,
-                           verbose = FALSE, method = "method.NNLS",cvControl = control)
-
-score_to_1 <- to_mod_oob$SL.predict
-
-to_mod_oob <- SuperLearner(Y = pseudo_all[(nhalf+1):n,1], X = data[(nhalf+1):n,covariates], newX = data[1:nhalf,covariates], SL.library = learners,
-                           verbose = FALSE, method = "method.NNLS",cvControl = control)
-
-score_to_0 <- to_mod_oob$SL.predict
-
-
-score_to_oob= rbind(score_to_0,score_to_1)
- 
+res_combined_ipw <- matrix(NA,nrow(data),5)
+# loop
+for(l in 1:10){
   
-  return(score_to_oob)
+  set <- seq(from=1, to=nrow(data)+1,by=(nrow(data)/10))
+  set
+  
+  if(l<=5){
+    ipw_mod_cf <- SuperLearner(Y = pseudo_all[(set[l]:set[l+1]-1),1],X=data[(set[l]:set[l+1]-1),covariates], 
+                              newX = data[(set[6]:set[11]-1),covariates], SL.library = learners,
+                               verbose = FALSE, method = "method.NNLS",cvControl = control)
+    
+    score_ipw_1_cf <- ipw_mod_cf$SL.predict
+    res_combined_ipw[(set[6]:set[11]-1),l] <- score_dr_1_cf
+  }
+  if(l>5){
+    ipw_mod_cf <- SuperLearner(Y =pseudo_all[(set[l]:set[l+1]-1),1],X=data[(set[l]:set[l+1]-1),covariates], 
+                              newX =data[(set[1]:set[6]-1),covariates], SL.library = learners,
+                              verbose = FALSE, method = "method.NNLS",cvControl = control)
+    
+    score_ipw_0_cf <- ipw_mod_cf$SL.predict
+    res_combined_ipw[(set[1]:set[6]-1),(l-5)] <- score_dr_0_cf
+  }
+  
+}
+ 
+score_ipw_oob <- rowMeans(res_combined_ipw)
+  
+  return(score_ipw_oob)
   }
