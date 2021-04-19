@@ -477,22 +477,35 @@ score_dr <- a
 res_learner_dr[,1] <- dr_mod$cvRisk
 res_learner_dr[,1+1] <- dr_mod$coef
 
-nhalf = 0.5*nrow(data)
-n = nrow(data)
+## Cross-fit version
+# Combined method
+res_combined_dr <- matrix(NA,nrow(data),5)
+# loop
+for(l in 1:10){
+  
+  set <- seq(from=1, to=nrow(data)+1,by=(nrow(data)/10))
+  set
+  
+  if(l<=5){
+    dr_mod_cf <- SuperLearner(Y = pseudo_all[(set[l]:set[l+1]-1),1],X=data[(set[l]:set[l+1]-1),covariates], 
+                              newX = data[(set[6]:set[11]-1),covariates], SL.library = learners,
+                               verbose = FALSE, method = "method.NNLS",cvControl = control)
+    
+    score_dr_1_cf <- dr_mod_cf$SL.predict
+    res_combined_dr[(set[6]:set[11]-1),l] <- score_dr_1_cf
+  }
+  if(l>5){
+    dr_mod_cf <- SuperLearner(Y =pseudo_all[(set[l]:set[l+1]-1),1],X=data[(set[l]:set[l+1]-1),covariates], 
+                              newX =data[(set[1]:set[6]-1),covariates], SL.library = learners,
+                              verbose = FALSE, method = "method.NNLS",cvControl = control)
+    
+    score_dr_0_cf <- dr_mod_cf$SL.predict
+    res_combined_dr[(set[1]:set[6]-1),(l-5)] <- score_dr_0_cf
+  }
+  
+}
 
-dr_mod_oob <- SuperLearner(Y = pseudo_all[1:nhalf,1], X = data[1:nhalf,covariates], newX = data[(nhalf+1):n,covariates], SL.library = learners,
-                           verbose = FALSE, method = "method.NNLS",cvControl = control)
-
-score_dr_1 <- dr_mod_oob$SL.predict
-
-dr_mod_oob <- SuperLearner(Y = pseudo_all[(nhalf+1):n,1], X = data[(nhalf+1):n,covariates], newX = data[1:nhalf,covariates], SL.library = learners,
-                           verbose = FALSE, method = "method.NNLS",cvControl = control)
-
-score_dr_0 <- dr_mod_oob$SL.predict
-
-
-score_dr_oob= rbind(score_dr_0,score_dr_1)
-
+score_dr_oob <- rowMeans(res_combined_dr)
 
 #R-learner final estimate
 
@@ -506,18 +519,34 @@ res_learner_R[,1+1] <- R_mod$coef
 
 
 
+# Cross-fit version
+res_combined_r <- matrix(NA,nrow(data),5)
+# loop
+for(l in 1:10){
+  
+  set <- seq(from=1, to=nrow(data)+1,by=(nrow(data)/10))
+  set
+  
+  if(l<=5){
+    r_mod_cf <- SuperLearner(Y = pseudo_all[(set[l]:set[l+1]-1),2],X=data[(set[l]:set[l+1]-1),covariates], 
+                              newX = data[(set[6]:set[11]-1),covariates], SL.library = learners,
+                              verbose = FALSE, method = "method.NNLS",obsWeights = pseudo_all[(set[l]:set[l+1]-1),3],cvControl = control)
+    
+    score_r_1_cf <- r_mod_cf$SL.predict
+    res_combined_r[(set[6]:set[11]-1),l] <- score_r_1_cf
+  }
+  if(l>5){
+    r_mod_cf <- SuperLearner(Y =pseudo_all[(set[l]:set[l+1]-1),2],X=data[(set[l]:set[l+1]-1),covariates], 
+                              newX =data[(set[1]:set[6]-1),covariates], SL.library = learners,
+                              verbose = FALSE, method = "method.NNLS",obsWeights = pseudo_all[(set[l]:set[l+1]-1),3],cvControl = control)
+    
+    score_r_0_cf <- r_mod_cf$SL.predict
+    res_combined_r[(set[1]:set[6]-1),(l-5)] <- score_r_0_cf
+  }
+  
+}
 
-R_mod_oob <- SuperLearner(Y = pseudo_all[1:nhalf,2], X = data[1:nhalf,covariates], newX = data[(nhalf+1):n,covariates], SL.library = learners,
-                          verbose = FALSE, method = "method.NNLS",obsWeights = pseudo_all[1:nhalf,3],cvControl = control)
-score_R_1 <- R_mod_oob$SL.predict
-
-
-
-R_mod_oob <- SuperLearner(Y = pseudo_all[(nhalf+1):n,2], X = data[(nhalf+1):n,covariates], newX = data[1:nhalf,covariates], SL.library = learners,
-                          verbose = FALSE, method = "method.NNLS",obsWeights = pseudo_all[(nhalf+1):n,3],cvControl = control)
-score_R_0 <- R_mod_oob$SL.predict
-
-score_R_oob = rbind(score_R_0,score_R_1)
+score_R_oob <- rowMeans(res_combined_r)
 
 # X-learner final estimate
 a1  <- tryCatch({
