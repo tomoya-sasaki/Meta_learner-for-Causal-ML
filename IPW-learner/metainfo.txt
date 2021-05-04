@@ -7,10 +7,10 @@ Description: Inverse probability weighting (transformed-outcome) method to estim
 
 The data structure has to be the following: 
 
-* y = outcome variable
-* d = treatment variable
-* covariates = the covariates to map on d or y
-* learners = the machine learning methods to use in the [SuperLearner package](https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html).
+- y = outcome variable
+- d = treatment variable
+- covariates = the covariates to map on d or y
+- learners = the machine learning methods to use in the [SuperLearner package](https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html).
 
 
 Keywords: 'CATE, ML, IPW, causal-inference, treatment'
