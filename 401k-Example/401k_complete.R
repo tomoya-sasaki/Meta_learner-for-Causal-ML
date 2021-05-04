@@ -668,7 +668,6 @@ mm <- rbind(mm_DR,mm_R,mm_T,mm_X,mm_CBART,mm_CF)
 mm$Method <- rep(c("DR-learner","R-learner","T-learner","X-learner","Causal-BART","Causal-Forest"),each=nrow(mm_DR))
 
 # Plot the CATE estimates + CI for 5% and 95%
-# Plot the CATE estimates + CI for 5% and 95%
 ggplot(mm, aes(x=ID,y=value,group=variable))+
   geom_line(aes(color=variable,alpha=variable),size=1.1)+
   scale_alpha_manual(values=c(1.0,0.01,0.01),labels = c("CATE","CI lower 5%", "CI upper 95%")) +
